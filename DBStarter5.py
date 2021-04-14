@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sun Oct 09 15:49:00 2016
+Created on Mon Oct 10 22:57:08 2016
 
 @author: james.bradley
 """
@@ -10,15 +10,15 @@ import datetime
 
 cnx = mySQL.connect(user='root', passwd='MySQL',
                     host='127.0.0.1', db='assignmentproblem1')                              
-
 cursor = cnx.cursor()
-queryResults = []
+
+query_base = 'CALL `spAddRoute`(%s,%s,%s);'
+    
+data = [(0,4,750),(1,3,1000),(4,2,1200)]
 start_time = datetime.datetime.now()
-args = [0,0] # or (0,0)
-cursor.callproc('spGetCostForDCStore',args)
+cursor.executemany(query_base, data)
+cnx.commit()
 stop_time = datetime.datetime.now()
-for result in cursor.stored_results():
-    queryResults.append(result.fetchall())
-print('Type of query_results:', type(queryResults),'\n',queryResults,'\n')
-print('Execution time (sec):',stop_time - start_time)
 cursor.close()
+cnx.close()
+print('Execution time (sec):', stop_time - start_time)
